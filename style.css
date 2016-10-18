@@ -1,0 +1,57 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#slider {
+    width: 500px;
+    position: relative;
+}
+
+#slider img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+#slider div[class^='button'] {
+    position: absolute;
+    left: -10%;
+    top: 50%;
+    width: 15px;
+    height: 15px;
+    border: 2px solid #8a8a8a;
+    border-width: 2px 0 0 2px;
+    transform: translateY(-50%) rotate(-45deg);
+    cursor: pointer;
+}
+
+#slider div.button-2 {
+    left: 106%;
+    top: 50%;
+    transform: translateY(-50%) rotate(135deg)
+}
+
+#slider .boxDots {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%)
+}
+
+#slider .boxDots div[class^='dot'] {
+    width: 7px;
+    height: 7px;
+    border: 3px solid #8a8a8a;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+}
+
+#slider .boxDots div[class^='dot']:not(:last-child) {
+    margin-right: 3px;
+}
+
+#slider .boxDots div[class^='dot'].active {
+    background: yellowgreen;
+    ;
+}
