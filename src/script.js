@@ -4,32 +4,66 @@ class Slider {
     constructor(options) {
         this.img = options.img;
         this.wrapper = options.wrapper;
-        this.count = 0;
-
-        this.wrapper.addEventListener('click', bind(this.listenerClick, this));
+        this.count = -100;
+        this.index;
+        this.statusClick = true;
+        this.wrapper.addEventListener('click', bind(this.listenerEvent, this));
+        this.wrapper.addEventListener('transitionend', bind(this.listenerEvent, this))
     }
 
-    listenerClick(event) {
-        if (event.target.closest('div[class^="button"]')) {
-            if (event.target.className == "button-1") this.left();
-            else this.right();
+    listenerEvent(event) {
+        if (event.type == 'click') {
+            if (event.target.classList.contains('button-1')) this.left();
+            if (event.target.classList.contains('button-2')) this.right();
+
+
+            if (event.target.hasAttribute('data-index')) {
+                let index = event.target.dataset.index;
+                this.count = -index * 100;
+                this.carouselImg.style.transition = 'left 700ms';
+                this.setMainImg();
+                this.setActiveDot();
+            }
         }
 
-        if (event.target.closest('div[class^="dot"]')) {
-            let selectedDot = event.target.className.split(' ')[0];
+        if (event.type == "transitionend") {}
 
-            this.count = +selectedDot.charAt(selectedDot.length - 1) - 1;
-
-            this.setMainImg();
-            this.setActiveDot();
-        }
     }
 
     renderSlider() {
-        let elem = document.createElement('img');
-        elem.src = this.img[this.count];
-        this.wrapper.appendChild(elem);
-        this.mainImg = elem;
+        let limiterForWidth = document.createElement('div'),
+            carouselImg = document.createElement('div');
+
+        limiterForWidth.classList.add('limiterForWidth');
+        carouselImg.classList.add('carouselImg');
+
+        carouselImg.style.width = `${this.wrapper.offsetWidth * (this.img.length + 2) }px`;
+
+        for (let i = 0; i < this.img.length; i++) {
+            let img = document.createElement('img');
+            img.src = this.img[i];
+            img.style.width = `${this.wrapper.offsetWidth}px`;
+            carouselImg.appendChild(img);
+        }
+
+        for (let i = 0; i < 2; i++) {
+            let img = document.createElement('img');
+
+            if (i == 0) {
+                img.src = this.img[this.img.length - 1];
+                carouselImg.insertAdjacentElement('afterBegin', img);
+            } else {
+                img.src = this.img[0];
+                carouselImg.insertAdjacentElement('beforeEnd', img);
+            }
+            img.style.width = `${this.wrapper.offsetWidth}px`;
+        }
+
+
+        limiterForWidth.appendChild(carouselImg);
+        this.wrapper.appendChild(limiterForWidth);
+
+        this.carouselImg = carouselImg;
     }
 
     renderButtonSlider() {
@@ -46,32 +80,65 @@ class Slider {
 
         for (let i = 1; i < this.img.length + 1; i++) {
             let elem = document.createElement('div');
-            elem.classList.add(`dot-${i}`);
+            elem.setAttribute('data-index', i);
             boxElem.appendChild(elem);
         }
-        boxElem.children[this.count].classList.add('active');
+        this.index = 1;
         this.wrapper.appendChild(boxElem);
         this.boxElem = boxElem;
     }
 
     left() {
-        this.count--;
-        if (this.count < 0) this.count = this.img.length - 1;
+        if (this.statusClick) {
+            this.count += 100;
 
-        this.setMainImg();
-        this.setActiveDot();
+            this.carouselImg.style.transition = 'left 700ms';
+            this.setMainImg();
+            this.startShift();
+            this.setActiveDot();
+        }
     }
 
     right() {
-        this.count++;
-        if (this.count > this.img.length - 1) this.count = 0;
+        if (this.statusClick) {
+            this.count -= 100;
 
-        this.setMainImg();
-        this.setActiveDot();
+            this.carouselImg.style.transition = 'left 700ms';
+            this.setMainImg();
+            this.startShift();
+            this.setActiveDot();
+        }
+    }
+
+    startShift() {
+        this.statusClick = false;
+        window.ontransitionend = bind(function() {
+            if (this.count == 0) {
+                this.count = this.getShiftInterval() + 100;
+                this.carouselImg.style.transition = '';
+                this.setMainImg();
+                this.setActiveDot();
+            }
+
+            if (this.count == this.getShiftInterval()) {
+
+                this.count = -100;
+                this.carouselImg.style.transition = '';
+                this.setMainImg();
+                this.setActiveDot();
+            }
+
+            this.statusClick = true;
+            window.ontransitionend = null;
+        }, this)
+    }
+
+    getShiftInterval() {
+        return - +(this.img.length + 1 + '00');
     }
 
     setMainImg() {
-        this.mainImg.src = this.img[this.count];
+        this.carouselImg.style.left = `${this.count}%`;
     }
 
     setActiveDot() {
@@ -79,7 +146,11 @@ class Slider {
             this.boxElem.children[i].classList.remove('active');
         }
 
-        this.boxElem.children[this.count].classList.add('active');
+        let count = this.count * -1 / 100 - 1;
+        if (count > this.boxElem.children.length - 1) count = 0;
+        if (count < 0) count = this.boxElem.children.length - 1;
+
+        this.boxElem.children[count].classList.add('active');
     }
 
     preloadImg() {
@@ -88,13 +159,13 @@ class Slider {
         }
     }
 
-
-
     start() {
         this.preloadImg();
         this.renderSlider();
         this.renderButtonSlider();
         this.renderDots();
+        this.setMainImg();
+        this.setActiveDot();
     }
 }
 
@@ -104,5 +175,5 @@ let slider = new Slider({
 });
 
 slider.start();
-
+slider.getShiftInterval();
 console.dir(slider)
