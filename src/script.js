@@ -23,6 +23,21 @@ class Slider {
     // ===================================================================================================
 
     fitWidth() { // Метод для установления соответствия между шириной родителя и количеством отображаемых слайдов
+        let maxSize = [0, 0];
+        for (let key in this.amountImg) {
+            let size = this.amountImg[key];
+            if (size >= maxSize[0]) {
+                maxSize[0] = size;
+                maxSize[1] = key;
+            }
+        }
+
+        if (this.getWidthWrapper() > maxSize[0]) {
+            this.getWidthImg(maxSize[1]);
+            this.currentAmountImg = maxSize[1];            
+            return;
+        }
+
         for (let key in this.amountImg) {
             if (this.getWidthWrapper() <= this.amountImg[key]) {
                 this.getWidthImg(key);

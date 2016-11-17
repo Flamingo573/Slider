@@ -34,10 +34,25 @@ var Slider = function () {
         key: 'fitWidth',
         value: function fitWidth() {
             // Метод для установления соответствия между шириной родителя и количеством отображаемых слайдов
+            var maxSize = [0, 0];
             for (var key in this.amountImg) {
-                if (this.getWidthWrapper() <= this.amountImg[key]) {
-                    this.getWidthImg(key);
-                    this.currentAmountImg = key;
+                var size = this.amountImg[key];
+                if (size >= maxSize[0]) {
+                    maxSize[0] = size;
+                    maxSize[1] = key;
+                }
+            }
+
+            if (this.getWidthWrapper() > maxSize[0]) {
+                this.getWidthImg(maxSize[1]);
+                this.currentAmountImg = maxSize[1];
+                return;
+            }
+
+            for (var _key in this.amountImg) {
+                if (this.getWidthWrapper() <= this.amountImg[_key]) {
+                    this.getWidthImg(_key);
+                    this.currentAmountImg = _key;
                     break;
                 }
             }
