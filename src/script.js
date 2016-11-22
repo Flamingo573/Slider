@@ -34,7 +34,7 @@ class Slider {
 
         if (this.getWidthWrapper() > maxSize[0]) {
             this.getWidthImg(maxSize[1]);
-            this.currentAmountImg = maxSize[1];            
+            this.currentAmountImg = maxSize[1];
             return;
         }
 
@@ -112,9 +112,8 @@ class Slider {
 
     renderDots() { // Создание навигационных точек
         let result = this.wrapper.querySelector('.boxDots');
-        if (result) {
-            this.wrapper.removeChild(result);
-        }
+        if (result) this.wrapper.removeChild(result);
+
         let boxElem = document.createElement('div');
         boxElem.classList.add('boxDots');
 
@@ -134,10 +133,8 @@ class Slider {
 
     addClone() { // Создает дополнительные элементы
         let result = this.carousel.getElementsByClassName('clone');
-
         if (result.length) {
             for (let i = 0; i < result.length; i++) {
-
                 this.carousel.removeChild(result[i]);
                 i--;
             }
@@ -366,7 +363,6 @@ class Slider {
             clearInterval(this.timeId);
             this.timeId = setInterval(bind(function func() {
                 this.right();
-                //this.timeId = setTimeout(bind(func, this), time);
             }, this), time);
         }
 
@@ -383,16 +379,17 @@ class Slider {
     // ЗАПУСК СЛАЙДЕРА
     // ===================================================================================================
     start() {
-        this.fitWidth();
-        this.setWidthImg();
-        this.getStartPositionCaroisel();
-        this.setPositionCarousel();
-        this.renderButtonSlider();
-        this.renderDots();
-        this.setActiveDot();
-        this.addClone();
-        this.setObjectForShiftDots();
-        this.autoPlay('play');
+      this.fitWidth();
+      this.setWidthImg();
+      this.setWidthCarousel();
+      this.renderButtonSlider();
+      this.renderDots();
+      this.addClone();
+      this.getStartPositionCaroisel();
+      this.setPositionCarousel();
+      this.setObjectForShiftDots();
+      this.getActiveDots();
+      this.autoPlay('play');
     }
 }
 

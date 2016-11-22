@@ -138,9 +138,8 @@ var Slider = function () {
         value: function renderDots() {
             // Создание навигационных точек
             var result = this.wrapper.querySelector('.boxDots');
-            if (result) {
-                this.wrapper.removeChild(result);
-            }
+            if (result) this.wrapper.removeChild(result);
+
             var boxElem = document.createElement('div');
             boxElem.classList.add('boxDots');
 
@@ -164,10 +163,8 @@ var Slider = function () {
 
             // Создает дополнительные элементы
             var result = this.carousel.getElementsByClassName('clone');
-
             if (result.length) {
                 for (var i = 0; i < result.length; i++) {
-
                     this.carousel.removeChild(result[i]);
                     i--;
                 }
@@ -413,7 +410,6 @@ var Slider = function () {
                 clearInterval(this.timeId);
                 this.timeId = setInterval(bind(function func() {
                     this.right();
-                    //this.timeId = setTimeout(bind(func, this), time);
                 }, this), time);
             }
 
@@ -435,13 +431,14 @@ var Slider = function () {
         value: function start() {
             this.fitWidth();
             this.setWidthImg();
-            this.getStartPositionCaroisel();
-            this.setPositionCarousel();
+            this.setWidthCarousel();
             this.renderButtonSlider();
             this.renderDots();
-            this.setActiveDot();
             this.addClone();
+            this.getStartPositionCaroisel();
+            this.setPositionCarousel();
             this.setObjectForShiftDots();
+            this.getActiveDots();
             this.autoPlay('play');
         }
     }]);

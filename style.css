@@ -20,6 +20,10 @@ body {
     -ms-user-select: none;
 }
 
+#slider .clone {
+    background: yellow;
+}
+
 #slider .limiterForWidth {
     width: 100%;
     background: #00a8ff;
