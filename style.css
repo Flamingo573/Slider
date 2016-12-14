@@ -94,6 +94,11 @@ body {
     cursor: -webkit-grab;
 }
 
+#count {
+    position: absolute;
+    top: 50%;
+}
+
 @media screen and (max-width: 1000px) {
     body {
         width: 80%;
