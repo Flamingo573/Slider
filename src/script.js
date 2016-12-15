@@ -36,6 +36,8 @@ class Slider {
         this.bindMove = bind(this.eventMove, this);
         this.bindUp = bind(this.eventUp, this);
 
+        this.widthBody = document.body.offsetWidth;
+
         this.carousel.ondragstart = () => false;
 
         this.limiter.addEventListener('mousedown', bind(this.eventDown, this));
@@ -54,7 +56,11 @@ class Slider {
      */
     listenerEvent(event) {
         if (event.type == 'resize') {
-            this.start();
+            if (this.widthBody < document.body.offsetWidth || this.widthBody > document.body.offsetWidth) {
+                this.widthBody = document.body.offsetWidth;
+
+                this.start();
+            }
             return;
         }
 

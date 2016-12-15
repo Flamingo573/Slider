@@ -44,6 +44,8 @@ var Slider = function () {
         this.bindMove = bind(this.eventMove, this);
         this.bindUp = bind(this.eventUp, this);
 
+        this.widthBody = document.body.offsetWidth;
+
         this.carousel.ondragstart = function () {
             return false;
         };
@@ -67,7 +69,11 @@ var Slider = function () {
         key: 'listenerEvent',
         value: function listenerEvent(event) {
             if (event.type == 'resize') {
-                this.start();
+                if (this.widthBody < document.body.offsetWidth || this.widthBody > document.body.offsetWidth) {
+                    this.widthBody = document.body.offsetWidth;
+
+                    this.start();
+                }
                 return;
             }
 
